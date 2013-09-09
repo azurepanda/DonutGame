@@ -26,5 +26,12 @@ namespace Game
         {
 
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            System.Threading.Thread t = new System.Threading.Thread(() => gameControl1.StartGame());
+            t.IsBackground = true;
+            t.Start();
+        }
     }
 }

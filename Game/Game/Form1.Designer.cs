@@ -34,6 +34,7 @@
             // 
             // gameControl1
             // 
+            this.gameControl1.Camera = ((System.Drawing.PointF)(resources.GetObject("gameControl1.Camera")));
             this.gameControl1.Location = new System.Drawing.Point(0, 0);
             this.gameControl1.Margin = new System.Windows.Forms.Padding(0);
             this.gameControl1.MaximumSize = new System.Drawing.Size(1024, 768);
@@ -56,6 +57,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Donut Game";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

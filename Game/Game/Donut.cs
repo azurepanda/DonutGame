@@ -50,12 +50,12 @@ namespace Game
             if (s.KeyDown(Keys.Right))
             {
                 XVel += 1;
-                cam -= 10;
+                //cam -= 10;
             }
             if (s.KeyDown(Keys.Left))
             {
                 XVel -= 1;
-                cam += 10;
+                //cam += 10;
             }
             if (s.KeyDown(Keys.R))
             {
@@ -73,8 +73,9 @@ namespace Game
             {
                 Friction = 0.95F;
             }
-            if (cam < 128) cam = 128;
-            if (cam > (l.Owner.Width - 256)) cam = (l.Owner.Width - 256);
+            cam -= XVel;
+            if (cam < 256) cam = 256;
+            if (cam > (l.Owner.Width - 512)) cam = (l.Owner.Width - 512);
             l.Owner.Camera = new PointF(cam - X, 0);
             if (l.Owner.Camera.X > 0)
             {

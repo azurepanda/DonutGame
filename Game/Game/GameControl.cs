@@ -19,6 +19,8 @@ namespace Game
         private InputState inputstate;
         private InputState inputstateP;
         public Image[,] imageset;
+        public bool running;
+        public float loaded;
 
         public GameControl()
         {
@@ -27,6 +29,9 @@ namespace Game
         public void InitializeComponent()
         {
             DoubleBuffered = true;
+
+            loaded = 0;
+            running = false;
             
             Width = 1024;
             Height = 768;
@@ -34,8 +39,6 @@ namespace Game
             MaximumSize = Size;
             camera = new PointF(0, 0);
 
-            imageset = new Image[16,16];
-            LoadTileSet();
             lgb = new LinearGradientBrush(new Point(0, 0), new Point(0, Height), Color.FromArgb(221, 236, 255), Color.FromArgb(101, 178, 244));
             
             Paint += GameControl_Paint;
@@ -50,8 +53,6 @@ namespace Game
             inputstate = new InputState();
             inputstateP = new InputState();
 
-            currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
-            
             timer = new Timer();
             timer.Tick += timer_Tick;
             timer.Interval = 30;
@@ -66,9 +67,20 @@ namespace Game
                 for (int y = 0; y < 16; y++)
                 {
                     imageset[x, y] = Sprite.GetTile(Properties.Resources.tilesheet, new Point(x, y), new Size(128, 128));
+                    loaded += (100f / 256f);
                 }
             }
             Console.WriteLine("Loaded");
+        }
+
+        public void StartGame()
+        {
+            loaded = 0;
+            imageset = new Image[16, 16];
+            LoadTileSet();
+
+            currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
+            running = true;
         }
 
         private static Level LoadLevel(string data, GameControl gc, Image[,] iset)
@@ -195,15 +207,22 @@ namespace Game
 
         void timer_Tick(object sender, EventArgs e)
         {
-            Matrix m = new Matrix();
-            m.Translate(camera.X, camera.Y);
-            inputstate.CameraMatrix = m; 
-            foreach(Sprite s in currentLevel.GetSpriteList())
+            if (running)
             {
-                s.Update(currentLevel, inputstate, inputstateP);
+                Matrix m = new Matrix();
+                m.Translate(camera.X, camera.Y);
+                inputstate.CameraMatrix = m;
+                foreach (Sprite s in currentLevel.GetSpriteList())
+                {
+                    s.Update(currentLevel, inputstate, inputstateP);
+                }
+                Invalidate();
+                inputstateP = (InputState)inputstate.Clone();
             }
-            Invalidate();
-            inputstateP = (InputState) inputstate.Clone();
+            else
+            {
+                Invalidate();
+            }
         }
 
         void GameControl_Click(object sender, EventArgs e)
@@ -215,18 +234,40 @@ namespace Game
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.FillRectangle(lgb, 0, 0, Width, Height);
-            e.Graphics.TranslateTransform(camera.X, camera.Y);
-            foreach(Sprite s in currentLevel.GetSpriteList())
+            if (running)
             {
-                if(new Rectangle(-256 - (int) Camera.X, -256 - (int) Camera.Y, Width + 512, Height + 512).Contains(new Rectangle((int) s.X, (int) s.Y, (int) s.Width, (int) s.Height + 128)))
+                e.Graphics.TranslateTransform(camera.X, camera.Y);
+                foreach (Sprite s in currentLevel.GetSpriteList())
                 {
-                    using (ImageAttributes wrapMode = new ImageAttributes())
+                    if (new Rectangle(-256 - (int)Camera.X, -256 - (int)Camera.Y, Width + 512, Height + 512).Contains(new Rectangle((int)s.X, (int)s.Y, (int)s.Width, (int)s.Height + 128)))
                     {
-                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                        //e.Graphics.DrawImage(s.GetImage(), s.Bounds, 0, 0, s.Width, s.Height, GraphicsUnit.Pixel, wrapMode));
-                        e.Graphics.DrawImage(s.GetImage(), Rectangle.Round(s.Bounds), 0, 0, s.Width, s.Height, GraphicsUnit.Pixel, wrapMode);
+                        using (ImageAttributes wrapMode = new ImageAttributes())
+                        {
+                            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                            //e.Graphics.DrawImage(s.GetImage(), s.Bounds, 0, 0, s.Width, s.Height, GraphicsUnit.Pixel, wrapMode));
+                            e.Graphics.DrawImage(s.GetImage(), Rectangle.Round(s.Bounds), 0, 0, s.Width, s.Height, GraphicsUnit.Pixel, wrapMode);
+                        }
                     }
                 }
+            }
+            else
+            {
+                Pen p = new Pen(Color.Black, 5);
+                p.LineJoin = LineJoin.Bevel;
+
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128,0,0,0)), Width / 2 - 236, Height / 2 - 108, 512, 256);
+                e.Graphics.FillRectangle(Brushes.Silver, Width / 2 - 256, Height / 2 - 128, 512, 256);
+                e.Graphics.DrawRectangle(p, Width / 2 - 256, Height / 2 - 128, 512, 256);
+
+                RectangleF prog = new RectangleF(Width / 2 - 224, Height / 2 - 24, 448, 48);
+
+                e.Graphics.FillRectangle(Brushes.Gray, prog);
+                e.Graphics.FillRectangle(Brushes.LimeGreen, prog.X,prog.Y,prog.Width * (loaded / 100),prog.Height);
+                e.Graphics.DrawRectangle(p, Rectangle.Round(prog));
+                StringFormat sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                sf.LineAlignment = StringAlignment.Center;
+                e.Graphics.DrawString("Loading...", new Font("Verdana", 24), Brushes.Black, prog, sf);
             }
         }
 
