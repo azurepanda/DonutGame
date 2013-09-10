@@ -21,6 +21,7 @@ namespace Game
         public Image[,] imageset;
         public bool running;
         public float loaded;
+        public int lives;
 
         public GameControl()
         {
@@ -32,6 +33,7 @@ namespace Game
 
             loaded = 0;
             running = false;
+            lives = 5;
             
             Width = 1024;
             Height = 768;
@@ -248,6 +250,12 @@ namespace Game
                             e.Graphics.DrawImage(s.GetImage(), Rectangle.Round(s.Bounds), 0, 0, s.Width, s.Height, GraphicsUnit.Pixel, wrapMode);
                         }
                     }
+                }
+                e.Graphics.ResetTransform();
+                
+                for(int i = 0; i < lives; i++)
+                {
+                    e.Graphics.DrawImage(Properties.Resources.donut,64 + i * 80, 64, 64, 64);
                 }
             }
             else
