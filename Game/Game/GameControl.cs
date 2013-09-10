@@ -22,6 +22,9 @@ namespace Game
         public bool running;
         public float loaded;
         public int lives;
+        public int levelno;
+        private int tolvl;
+        public bool gameover;
 
         public GameControl()
         {
@@ -33,7 +36,9 @@ namespace Game
 
             loaded = 0;
             running = false;
-            lives = 5;
+            gameover = false;
+
+            Reset();
             
             Width = 1024;
             Height = 768;
@@ -58,7 +63,12 @@ namespace Game
             timer = new Timer();
             timer.Tick += timer_Tick;
             timer.Interval = 30;
-            timer.Enabled = true; 
+            timer.Enabled = true;
+        }
+
+        private void Reset()
+        {
+            lives = 5;
         }
 
         private void LoadTileSet()
@@ -82,7 +92,14 @@ namespace Game
             LoadTileSet();
 
             currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
+            levelno = 1;
+
             running = true;
+        }
+
+        public void ToLevel(int lvl)
+        {
+            tolvl = lvl;
         }
 
         private static Level LoadLevel(string data, GameControl gc, Image[,] iset)
@@ -186,6 +203,17 @@ namespace Game
 
         void GameControl_MouseDown(object sender, MouseEventArgs e)
         {
+            if (gameover)
+            {
+                if (e.Button.HasFlag(MouseButtons.Left))
+                {
+                    Reset();
+                    currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
+                    levelno = 1;
+                    running = true;
+                    gameover = false;
+                }
+            }
             inputstate.MousePos = new PointF(e.X, e.Y);
             inputstate.SetMouseButtons(e.Button);
         }
@@ -211,6 +239,22 @@ namespace Game
         {
             if (running)
             {
+                if (tolvl != 0)
+                {
+                    if (tolvl == 1)
+                    {
+                        currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
+                        levelno = 1;
+                    }
+                    tolvl = 0;
+                }
+
+                if (lives <= 0)
+                {
+                    gameover = true;
+                    running = false;
+                }
+
                 Matrix m = new Matrix();
                 m.Translate(camera.X, camera.Y);
                 inputstate.CameraMatrix = m;
@@ -255,27 +299,41 @@ namespace Game
                 
                 for(int i = 0; i < lives; i++)
                 {
-                    e.Graphics.DrawImage(Properties.Resources.donut,64 + i * 80, 64, 64, 64);
+                    e.Graphics.DrawImage(Properties.Resources.life,i * 80, 0, 100, 100);
                 }
             }
             else
             {
-                Pen p = new Pen(Color.Black, 5);
-                p.LineJoin = LineJoin.Bevel;
+                    Pen p = new Pen(Color.Black, 5);
+                    p.LineJoin = LineJoin.Bevel;
+                    StringFormat sf = new StringFormat();
+                    sf.Alignment = StringAlignment.Center;
+                    sf.LineAlignment = StringAlignment.Center;
 
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128,0,0,0)), Width / 2 - 236, Height / 2 - 108, 512, 256);
-                e.Graphics.FillRectangle(Brushes.Silver, Width / 2 - 256, Height / 2 - 128, 512, 256);
-                e.Graphics.DrawRectangle(p, Width / 2 - 256, Height / 2 - 128, 512, 256);
+                if (gameover)
+                {
+                    RectangleF box = new RectangleF(Width / 2 - 256, Height / 2 - 128, 512, 256);
+                    box.Offset(20,20);
+                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), box);
+                    box.Offset(-20,-20);
+                    e.Graphics.FillRectangle(Brushes.Silver, box);
+                    e.Graphics.DrawRectangle(p, Rectangle.Round(box));
 
-                RectangleF prog = new RectangleF(Width / 2 - 224, Height / 2 - 24, 448, 48);
+                    e.Graphics.DrawString("Game Over!\n\nClick the screen to try again.", new Font("Verdana", 24), Brushes.Black, box, sf);
+                }
+                else
+                {
+                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), Width / 2 - 236, Height / 2 - 108, 512, 256);
+                    e.Graphics.FillRectangle(Brushes.Silver, Width / 2 - 256, Height / 2 - 128, 512, 256);
+                    e.Graphics.DrawRectangle(p, Width / 2 - 256, Height / 2 - 128, 512, 256);
 
-                e.Graphics.FillRectangle(Brushes.Gray, prog);
-                e.Graphics.FillRectangle(Brushes.LimeGreen, prog.X,prog.Y,prog.Width * (loaded / 100),prog.Height);
-                e.Graphics.DrawRectangle(p, Rectangle.Round(prog));
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                sf.LineAlignment = StringAlignment.Center;
-                e.Graphics.DrawString("Loading...", new Font("Verdana", 24), Brushes.Black, prog, sf);
+                    RectangleF prog = new RectangleF(Width / 2 - 224, Height / 2 - 24, 448, 48);
+
+                    e.Graphics.FillRectangle(Brushes.Gray, prog);
+                    e.Graphics.FillRectangle(Brushes.LimeGreen, prog.X, prog.Y, prog.Width * (loaded / 100), prog.Height);
+                    e.Graphics.DrawRectangle(p, Rectangle.Round(prog));
+                    e.Graphics.DrawString("Loading...", new Font("Verdana", 24), Brushes.Black, prog, sf);
+                }
             }
         }
 

@@ -145,6 +145,12 @@ namespace Game
             {
                 XVel = -(float)Math.Abs(XVel);
             }
+
+            if (Y > l.Owner.Height + 256)
+            {
+                l.Owner.ToLevel(l.Owner.levelno);
+                l.Owner.lives -= 1;
+            }
         }
 
         public float Angle

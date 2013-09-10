@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="donut.ico" />
+    <None Include="Resources\life.png" />
     <None Include="Resources\tiles_9.png" />
     <None Include="Resources\tiles_7.png" />
     <None Include="Resources\spiketile.png" />
