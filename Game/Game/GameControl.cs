@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -24,6 +25,8 @@ namespace Game
         public int lives;
         public int levelno;
         private int tolvl;
+        private int drawadv;
+        private int levelalpha;
         public bool gameover;
 
         public GameControl()
@@ -34,6 +37,7 @@ namespace Game
         {
             DoubleBuffered = true;
 
+            drawadv = 0;
             loaded = 0;
             running = false;
             gameover = false;
@@ -100,6 +104,7 @@ namespace Game
         public void ToLevel(int lvl)
         {
             tolvl = lvl;
+            drawadv = 100;
         }
 
         private static Level LoadLevel(string data, GameControl gc, Image[,] iset)
@@ -163,6 +168,10 @@ namespace Game
                     if (s.ToCharArray()[i] == 'R')
                     {
                         level.AddSprite(new FloorTile(new Point(i * 128, row * 128), key, iset[3, 8]));
+                    }
+                    if (s.ToCharArray()[i] == 'D')
+                    {
+                        level.AddSprite(new Door(new Point(i * 128, row * 128), key, iset[5, 8], iset[4, 8]));
                     }
                     if (s.ToCharArray()[i] == 'p')
                     {
@@ -246,7 +255,17 @@ namespace Game
                         currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
                         levelno = 1;
                     }
+                    if (tolvl == 2)
+                    {
+                        currentLevel = LoadLevel(Properties.Resources.level2, this, imageset);
+                        levelno = 2;
+                    }
                     tolvl = 0;
+                }
+
+                if (drawadv != 0)
+                {
+                    drawadv--;
                 }
 
                 if (lives <= 0)
@@ -296,7 +315,31 @@ namespace Game
                     }
                 }
                 e.Graphics.ResetTransform();
-                
+
+                if (drawadv > 0)
+                {
+                    if (drawadv >= 60)
+                    {
+                        levelalpha = (100 - drawadv) * 7;
+                        if (levelalpha > 255) levelalpha = 255;
+                    }
+                    else
+                    {
+                        if (drawadv <= 36)
+                        {
+                            levelalpha = drawadv * 7;
+                            if (levelalpha < 0) levelalpha = 0;
+                        }
+                    }
+                    Console.WriteLine(levelalpha);
+                    Font leveltextfont = new Font("Arial", 26, FontStyle.Bold);
+                    String leveltext = "Advanced to level " + levelno + "!";
+                    Size leveltextsize = TextRenderer.MeasureText(leveltext, leveltextfont);
+                    Color leveltextcolor = Color.FromArgb(levelalpha, 0, 0, 0);
+                    SolidBrush leveltextbrush = new SolidBrush(leveltextcolor);
+                    e.Graphics.DrawString(leveltext, leveltextfont, leveltextbrush, new Point((Width - leveltextsize.Width)/ 2, ((Height - leveltextsize.Height)/ 2) - Height/4));
+                }
+
                 for(int i = 0; i < lives; i++)
                 {
                     e.Graphics.DrawImage(Properties.Resources.life,i * 80, 0, 100, 100);

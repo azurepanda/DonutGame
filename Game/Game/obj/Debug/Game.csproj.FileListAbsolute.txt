@@ -16,3 +16,12 @@ C:\Users\Callum\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.csprojResolv
 C:\Users\Callum\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.Form1.resources
 C:\Users\Callum\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.Properties.Resources.resources
 C:\Users\Callum\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.csproj.GenerateResource.Cache
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\bin\Debug\Game.exe.config
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.exe
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.pdb
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\bin\Debug\Game.exe
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\bin\Debug\Game.pdb
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.csprojResolveAssemblyReference.cache
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.Form1.resources
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.Properties.Resources.resources
+C:\Users\Harry\Documents\GitHub\DonutGame\Game\Game\obj\Debug\Game.csproj.GenerateResource.Cache

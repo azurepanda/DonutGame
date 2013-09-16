@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Donut.cs" />
+    <Compile Include="Tiles\Door.cs" />
     <Compile Include="Tiles\FloorTile.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -92,9 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="donut.ico" />
+    <None Include="Resources\level2.txt" />
+    <None Include="Resources\tiles_7.png" />
     <None Include="Resources\life.png" />
     <None Include="Resources\tiles_9.png" />
-    <None Include="Resources\tiles_7.png" />
     <None Include="Resources\spiketile.png" />
     <None Include="Resources\donut.png" />
     <None Include="Resources\level1.txt" />

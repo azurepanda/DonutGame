@@ -89,7 +89,7 @@ namespace Game
 
             foreach (Sprite t in l.GetSpriteList())
             {
-                if (t != this)
+                if (t.GetType().Name.Equals("FloorTile"))
                 {
                     switch (CollisionState(t))
                     {
@@ -105,6 +105,12 @@ namespace Game
                         case 4:
                             leftC = true;
                             break;
+                    }
+                }
+                else
+                {
+                    if(t.GetType().Name.Equals("Door") && CollisionState(t) != 0){
+                        l.Owner.ToLevel(++l.Owner.levelno);
                     }
                 }
             }
@@ -145,7 +151,6 @@ namespace Game
             {
                 XVel = -(float)Math.Abs(XVel);
             }
-
             if (Y > l.Owner.Height + 256)
             {
                 l.Owner.ToLevel(l.Owner.levelno);
