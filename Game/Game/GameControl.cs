@@ -104,7 +104,10 @@ namespace Game
         public void ToLevel(int lvl)
         {
             tolvl = lvl;
-            drawadv = 100;
+            if (lvl > levelno)
+            {
+                drawadv = 100;
+            }           
         }
 
         private static Level LoadLevel(string data, GameControl gc, Image[,] iset)
@@ -168,6 +171,18 @@ namespace Game
                     if (s.ToCharArray()[i] == 'R')
                     {
                         level.AddSprite(new FloorTile(new Point(i * 128, row * 128), key, iset[3, 8]));
+                    }
+                    if (s.ToCharArray()[i] == 'S')
+                    {
+                        level.AddSprite(new FloorTile(new Point(i * 128, row * 128), key, iset[0, 9]));
+                    }
+                    if (s.ToCharArray()[i] == 'B')
+                    {
+                        level.AddSprite(new BounceTile(new Point(i * 128, row * 128), key, iset[6, 8]));
+                    }
+                    if (s.ToCharArray()[i] == 'C')
+                    {
+                        level.AddSprite(new SpikeTile(new Point(i * 128, row * 128), key, iset[7, 8]));
                     }
                     if (s.ToCharArray()[i] == 'D')
                     {

@@ -17,6 +17,7 @@ namespace Game
         private bool bottomC;
         private bool rightC;
         private int jump;
+        private int boost;
         private float cam;
 
         public Donut(Point loc, int key)
@@ -105,21 +106,48 @@ namespace Game
                         case 4:
                             leftC = true;
                             break;
+                    }                
+                }
+                if (t.GetType().Name.Equals("BounceTile"))
+                {
+                    Console.WriteLine(t.GetType().Name);
+                    switch (CollisionState(t))
+                    {
+                        case 1:
+                            topC = true;
+                            break;
+                        case 2:
+                            rightC = true;
+                            break;
+                        case 3:
+                            boost = 10;
+                            bottomC = true;
+                            break;
+                        case 4:
+                            leftC = true;
+                            break;
                     }
                 }
-                else
+                if (CollisionState(t) != 0)
                 {
-                    if(t.GetType().Name.Equals("Door") && CollisionState(t) != 0){
+                    if (t.GetType().Name.Equals("Door"))
+                    {
                         l.Owner.ToLevel(++l.Owner.levelno);
                     }
-                }
+                    if (t.GetType().Name.Equals("SpikeTile"))
+                    {
+                        l.Owner.ToLevel(l.Owner.levelno);
+                        l.Owner.lives -= 1;
+                    }
+                }  
             }
             if ((jump>0) && topC)
             {
-                if (s.KeyDown(Keys.Space))
+                Console.WriteLine(boost);
+                if (boost > 0)
                 {
                     YVel = -100;
-                    Friction = 1.0F;
+                    jump = 0;
                 }
                 else
                 {
@@ -130,6 +158,10 @@ namespace Game
             if (jump > 0)
             {
                 jump -= 1;
+            }
+            if (boost > 0)
+            {
+                boost -= 1;
             }
             if (topC)
             {

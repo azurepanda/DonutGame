@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace Game
 {
-    class SpikeTile : Sprite
+    class BounceTile : Sprite
     {
         private Image imagetile;
 
-        public SpikeTile(Point loc, int key, Image tile)
+        public BounceTile(Point loc, int key, Image tile)
         {
             this.Key = key;
             this.Size = new System.Drawing.SizeF(128, 128);

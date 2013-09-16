@@ -71,16 +71,6 @@ namespace Game.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap floortile {
-            get {
-                object obj = ResourceManager.GetObject("floortile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 
         /// p                             
         ///                              1223
@@ -96,11 +86,11 @@ namespace Game.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        /// p                             
-        ///                              1223
-        ///                             1Q556
-        ///                            1Q555W2222223                    12222222222223                            
-        ///2222222222222222222222222222Q55555555555W2222222223  12222222Q555555555555W222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 [rest of string was truncated]&quot;;.
+        /// p
+        ///
+        ///                             C     C
+        ///                             C     C
+        ///SSSSSSSSSSSSSSSSSSSSBBSSSSSSSSSSSSSSSSSSSSSSSSSSSSSBBSSSSSSSSSSSSSSSSBSSSSSSSSSSSSS.
         /// </summary>
         internal static string level2 {
             get {
@@ -114,16 +104,6 @@ namespace Game.Properties {
         internal static System.Drawing.Bitmap life {
             get {
                 object obj = ResourceManager.GetObject("life", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap spiketile {
-            get {
-                object obj = ResourceManager.GetObject("spiketile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
