@@ -110,17 +110,16 @@ namespace Game
                 }
                 if (t.GetType().Name.Equals("BounceTile"))
                 {
-                    Console.WriteLine(t.GetType().Name);
                     switch (CollisionState(t))
                     {
                         case 1:
+                            boost = 10;
                             topC = true;
                             break;
                         case 2:
                             rightC = true;
                             break;
                         case 3:
-                            boost = 10;
                             bottomC = true;
                             break;
                         case 4:
@@ -132,7 +131,7 @@ namespace Game
                 {
                     if (t.GetType().Name.Equals("Door"))
                     {
-                        l.Owner.ToLevel(++l.Owner.levelno);
+                        l.Owner.ToLevel(l.Owner.levelno + 1);
                     }
                     if (t.GetType().Name.Equals("SpikeTile"))
                     {
@@ -143,10 +142,9 @@ namespace Game
             }
             if ((jump>0) && topC)
             {
-                Console.WriteLine(boost);
                 if (boost > 0)
                 {
-                    YVel = -100;
+                    YVel = -70;
                     jump = 0;
                 }
                 else

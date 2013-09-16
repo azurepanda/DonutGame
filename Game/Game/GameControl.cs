@@ -103,11 +103,7 @@ namespace Game
 
         public void ToLevel(int lvl)
         {
-            tolvl = lvl;
-            if (lvl > levelno)
-            {
-                drawadv = 100;
-            }           
+            tolvl = lvl;    
         }
 
         private static Level LoadLevel(string data, GameControl gc, Image[,] iset)
@@ -265,6 +261,10 @@ namespace Game
             {
                 if (tolvl != 0)
                 {
+                    if (tolvl != levelno)
+                    {
+                        drawadv = 100;
+                    }
                     if (tolvl == 1)
                     {
                         currentLevel = LoadLevel(Properties.Resources.level1, this, imageset);
@@ -278,7 +278,7 @@ namespace Game
                     tolvl = 0;
                 }
 
-                if (drawadv != 0)
+                if (drawadv > 0)
                 {
                     drawadv--;
                 }
@@ -346,7 +346,6 @@ namespace Game
                             if (levelalpha < 0) levelalpha = 0;
                         }
                     }
-                    Console.WriteLine(levelalpha);
                     Font leveltextfont = new Font("Arial", 26, FontStyle.Bold);
                     String leveltext = "Advanced to level " + levelno + "!";
                     Size leveltextsize = TextRenderer.MeasureText(leveltext, leveltextfont);
